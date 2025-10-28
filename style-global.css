@@ -1,0 +1,50 @@
+/* ================================================
+   STYLE GLOBAL - Dégradé Radial Rose Subtil
+   À inclure dans toutes les pages du site
+   ================================================ */
+
+/* Application du fond sur toutes les pages */
+body {
+    background: radial-gradient(circle at center, #FFF0F5 0%, #FFFFFF 100%);
+    background-attachment: fixed; /* Le fond reste fixe lors du scroll */
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Pour les sections spécifiques qui doivent garder ce fond */
+.page-container,
+.main-content,
+section {
+    background: transparent; /* Laisse transparaître le fond du body */
+}
+
+/* Si vous avez un header/footer qui doit avoir un fond différent */
+header {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+footer {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+/* ================================================
+   VARIANTES (commentées par défaut)
+   ================================================ */
+
+/* 
+   VARIANTE A : Dégradé plus prononcé
+   background: radial-gradient(circle at center, #FFE4F0 0%, #FFFFFF 100%);
+*/
+
+/* 
+   VARIANTE B : Dégradé avec point focal légèrement décalé vers le haut
+   background: radial-gradient(circle at center 30%, #FFF0F5 0%, #FFFFFF 100%);
+*/
+
+/* 
+   VARIANTE C : Dégradé elliptique au lieu de circulaire
+   background: radial-gradient(ellipse at center, #FFF0F5 0%, #FFFFFF 100%);
+*/

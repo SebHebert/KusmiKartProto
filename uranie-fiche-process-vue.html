@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uranie - Process Couleur B2B</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        /* Submenu */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .submenu.open {
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+    <div id="app">
+        <!-- Sidebar Navigation -->
+        <div 
+            :class="['sidebar fixed left-0 top-0 h-full bg-gradient-to-b from-indigo-900 to-purple-900 shadow-2xl z-50', sidebarCollapsed ? 'collapsed' : '']"
+            style="width: 250px;">
+            <div class="flex flex-col h-full">
+                <!-- Logo -->
+                <div class="p-4 border-b border-white/20">
+                    <img src="logo-luna.png" alt="Luna Logo" class="h-12 w-auto">
+                </div>
+                
+                <!-- Menu Items -->
+                <nav class="flex-1 p-4 overflow-y-auto">
+                    <a href="uranie-accueil-vue.html" 
+                       class="flex items-center gap-3 px-3 py-2 mb-2 text-white hover:bg-white/10 rounded-lg transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span class="font-semibold text-sm">Accueil</span>
+                    </a>
+                    
+                    <a href="uranie-recherche-vue.html" 
+                       class="flex items-center gap-3 px-3 py-2 mb-2 text-white hover:bg-white/10 rounded-lg transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" stroke-width="2"/>
+                            <path d="m21 21-4.35-4.35" stroke-width="2"/>
+                        </svg>
+                        <span class="font-semibold text-sm">Recherche</span>
+                    </a>
+                    
+                    <!-- Menu Admin avec sous-menus -->
+                    <div class="mb-2">
+                        <button 
+                            @click="adminMenuOpen = !adminMenuOpen"
+                            class="flex items-center justify-between w-full px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-all">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                    <path stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <span class="font-semibold text-sm">Admin</span>
+                            </div>
+                            <svg 
+                                class="w-4 h-4 transition-transform"
+                                :class="{ 'rotate-180': adminMenuOpen }"
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24">
+                                <path stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        
+                        <!-- Sous-menus Admin -->
+                        <div 
+                            :class="['submenu', { 'open': adminMenuOpen }]"
+                            class="ml-4 mt-1">
+                            <a href="#" 
+                               @click.prevent="alert('Gestion des utilisateurs')"
+                               class="flex items-center gap-3 px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                </svg>
+                                <span>Utilisateurs</span>
+                            </a>
+                            
+                            <a href="#" 
+                               @click.prevent="alert('Gestion des processus')"
+                               class="flex items-center gap-3 px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                </svg>
+                                <span>Processus</span>
+                            </a>
+                            
+                            <a href="#" 
+                               @click.prevent="alert('Gestion des cartographies')"
+                               class="flex items-center gap-3 px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                                </svg>
+                                <span>Cartographies</span>
+                            </a>
+                            
+                            <a href="#" 
+                               @click.prevent="alert('Paramètres système')"
+                               class="flex items-center gap-3 px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                                </svg>
+                                <span>Paramètres</span>
+                            </a>
+                            
+                            <a href="#" 
+                               @click.prevent="alert('Logs système')"
+                               class="flex items-center gap-3 px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                <span>Logs</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Toggle Sidebar Button -->
+        <button 
+            @click="sidebarCollapsed = !sidebarCollapsed"
+            class="fixed left-0 top-1/2 -translate-y-1/2 bg-indigo-900 text-white p-2 rounded-r-lg shadow-lg z-40 transition-all hover:bg-indigo-800"
+            :style="{ left: sidebarCollapsed ? '0' : '250px' }">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-width="2" :d="sidebarCollapsed ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'"/>
+            </svg>
+        </button>
+
+        <!-- Main Content -->
+        <div 
+            class="transition-all duration-300"
+            :style="{ marginLeft: sidebarCollapsed ? '0' : '250px' }">
+            
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-6 shadow-lg">
+                <div class="container mx-auto px-4">
+                    <div class="flex items-center gap-4 mb-2">
+                        <button 
+                            @click="goBack"
+                            class="hover:bg-white/20 p-2 rounded-lg transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                            </svg>
+                        </button>
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <div>
+                            <h1 class="text-3xl font-bold" style="font-family: Georgia, serif;">
+                                Process : Couleur B2B
+                            </h1>
+                            <p class="text-purple-100 text-sm" v-if="searchQuery">
+                                Recherche : "{{ searchQuery }}"
+                            </p>
+                        </div>
+                    </div>
+                    <p class="text-purple-100 text-sm ml-16">Fiche détaillée du processus de gestion des couleurs</p>
+                </div>
+            </div>
+
+            <!-- Contenu principal -->
+            <div class="container mx-auto px-4 py-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- COLONNE GAUCHE - 2/3 -->
+                    <div class="lg:col-span-2 fade-in">
+                        
+                        <!-- Bloc Tags -->
+                        <block-component title="Tags" color="#6C63FF">
+                            <div class="flex flex-wrap gap-2">
+                                <span v-for="tag in tags" 
+                                      :key="tag.name"
+                                      class="inline-block px-3 py-1 rounded-full text-white text-xs font-semibold"
+                                      :style="{ backgroundColor: tag.color }">
+                                    {{ tag.name }}
+                                </span>
+                            </div>
+                        </block-component>
+
+                        <!-- Bloc Résumé -->
+                        <block-component title="Résumé" color="#2ECC71">
+                            <div class="prose prose-sm max-w-none">
+                                <p class="text-gray-700 leading-relaxed mb-4">
+                                    Le WMS doit communiquer à l'ERP CEGID les couleurs des lignes de commande, 
+                                    qui indiquent l'état de disponibilité et de préparation :
+                                </p>
+                                
+                                <div class="space-y-3 mb-4">
+                                    <color-item v-for="color in colors" 
+                                               :key="color.code"
+                                               :color="color">
+                                    </color-item>
+                                </div>
+
+                                <p class="text-gray-700 leading-relaxed font-semibold mb-2">Ces couleurs permettent :</p>
+                                <ul class="space-y-1 text-gray-700">
+                                    <li v-for="benefit in benefits" 
+                                        :key="benefit"
+                                        class="flex items-start gap-2">
+                                        <span class="text-purple-600 font-bold mt-0.5">•</span>
+                                        <span>{{ benefit }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </block-component>
+
+                        <!-- Bloc Architecture -->
+                        <block-component title="Architecture" color="#9B59B6">
+                            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-8 border-2 border-dashed border-purple-300">
+                                <div class="text-center space-y-4">
+                                    <div class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold shadow-lg">
+                                        WMS
+                                    </div>
+                                    <div class="text-3xl text-purple-600">↓</div>
+                                    <div class="text-sm text-gray-600 italic">Communication des couleurs</div>
+                                    <div class="text-3xl text-purple-600">↓</div>
+                                    <div class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg font-semibold shadow-lg">
+                                        ERP CEGID
+                                    </div>
+                                </div>
+                                <p class="text-center text-xs text-gray-500 mt-6 italic">
+                                    Schéma simplifié de l'architecture de communication
+                                </p>
+                            </div>
+                        </block-component>
+
+                        <!-- Bloc Liens pratiques -->
+                        <block-component title="Liens pratiques" color="#F39C12">
+                            <div class="space-y-2">
+                                <h4 class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Documentation SharePoint</h4>
+                                <link-item v-for="link in sharepointLinks" 
+                                          :key="link"
+                                          :text="link"
+                                          type="sharepoint"
+                                          @click="openLink(link)">
+                                </link-item>
+                                
+                                <h4 class="text-sm font-semibold text-gray-600 mb-3 mt-6 uppercase tracking-wide">Portails de Monitoring</h4>
+                                <link-item v-for="link in monitoringLinks" 
+                                          :key="link"
+                                          :text="link"
+                                          type="monitoring"
+                                          @click="openLink(link)">
+                                </link-item>
+                            </div>
+                        </block-component>
+
+                    </div>
+
+                    <!-- COLONNE DROITE - 1/3 -->
+                    <div class="lg:col-span-1 fade-in" style="animation-delay: 0.2s">
+                        
+                        <!-- Bloc Cartographie -->
+                        <block-component title="Cartographie" color="#9B59B6">
+                            <associated-item v-for="item in cartographies"
+                                            :key="item.title"
+                                            :item="item"
+                                            icon="🗺️"
+                                            @click="openLink(item.title)">
+                            </associated-item>
+                        </block-component>
+
+                        <!-- Bloc Flux -->
+                        <block-component title="Flux" color="#3498DB">
+                            <associated-item v-for="item in flux"
+                                            :key="item.title"
+                                            :item="item"
+                                            icon="🌊"
+                                            @click="openLink(item.title)">
+                            </associated-item>
+                        </block-component>
+
+                        <!-- Bloc Ressources IT -->
+                        <block-component title="Ressources IT" color="#E74C3C">
+                            <associated-item v-for="item in ressources"
+                                            :key="item.title"
+                                            :item="item"
+                                            icon="💻"
+                                            @click="openLink(item.title)">
+                            </associated-item>
+                        </block-component>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <script>
+        const { createApp } = Vue;
+
+        // Composant Bloc générique
+        const BlockComponent = {
+            template: `
+                <div class="bg-white rounded-2xl shadow-lg p-6 mb-6 border-l-4"
+                     :style="{ borderLeftColor: color }">
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2"
+                        style="font-family: Georgia, serif;"
+                        :style="{ color: color }">
+                        <span>{{ title }}</span>
+                    </h3>
+                    <slot></slot>
+                </div>
+            `,
+            props: ['title', 'color']
+        };
+
+        // Composant Item de couleur
+        const ColorItem = {
+            template: `
+                <div class="p-4 rounded-lg border-2"
+                     :style="{ 
+                         backgroundColor: color.bgColor, 
+                         borderColor: color.borderColor 
+                     }">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-4 h-4 rounded-full"
+                             :style="{ backgroundColor: color.circleColor }">
+                        </div>
+                        <h4 class="font-bold"
+                            :style="{ color: color.textColor }">
+                            {{ color.name }}
+                        </h4>
+                    </div>
+                    <p class="text-sm"
+                       :style="{ color: color.textColor }">
+                        {{ color.description }}
+                    </p>
+                </div>
+            `,
+            props: ['color']
+        };
+
+        // Composant Lien
+        const LinkItem = {
+            template: `
+                <div class="flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"
+                     @click="$emit('click')">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-lg"
+                         :class="type === 'sharepoint' ? 'bg-blue-100' : 'bg-green-100'">
+                        {{ type === 'sharepoint' ? '📄' : '📊' }}
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">{{ text }}</span>
+                    <svg class="w-4 h-4 text-gray-400 ml-auto" 
+                         fill="none" 
+                         stroke="currentColor" 
+                         stroke-width="2" 
+                         viewBox="0 0 24 24">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                        <polyline points="15 3 21 3 21 9"/>
+                        <line x1="10" y1="14" x2="21" y2="3"/>
+                    </svg>
+                </div>
+            `,
+            props: ['text', 'type']
+        };
+
+        // Composant Item associé (cartographie, flux, ressources)
+        const AssociatedItem = {
+            template: `
+                <div class="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors mb-3"
+                     @click="$emit('click')">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-xl"
+                             :style="{ backgroundColor: item.color + '33' }">
+                            {{ icon }}
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800 mb-1 text-sm">{{ item.title }}</h4>
+                            <p class="text-sm text-gray-600">{{ item.description }}</p>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0 mt-1" 
+                             fill="none" 
+                             stroke="currentColor" 
+                             stroke-width="2" 
+                             viewBox="0 0 24 24">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                            <polyline points="15 3 21 3 21 9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                    </div>
+                </div>
+            `,
+            props: ['item', 'icon']
+        };
+
+        // Application principale
+        createApp({
+            components: {
+                BlockComponent,
+                ColorItem,
+                LinkItem,
+                AssociatedItem
+            },
+            data() {
+                return {
+                    sidebarCollapsed: false,
+                    adminMenuOpen: false,
+                    searchQuery: '',
+                    tags: [
+                        { name: 'B2B', color: '#6C63FF' },
+                        { name: 'Couleur', color: '#E74C3C' },
+                        { name: 'WMS', color: '#3498DB' },
+                        { name: 'CEGID', color: '#2ECC71' },
+                        { name: 'ERP', color: '#F39C12' },
+                        { name: 'Logistique', color: '#9B59B6' }
+                    ],
+                    colors: [
+                        {
+                            code: 'VER',
+                            name: 'VERT (VER)',
+                            description: 'Ligne complètement réservée, prête à préparer',
+                            bgColor: '#f0fdf4',
+                            borderColor: '#22c55e',
+                            circleColor: '#22c55e',
+                            textColor: '#166534'
+                        },
+                        {
+                            code: 'ROU',
+                            name: 'ROUGE (ROU)',
+                            description: 'Ligne non réservée, stock insuffisant',
+                            bgColor: '#fef2f2',
+                            borderColor: '#ef4444',
+                            circleColor: '#ef4444',
+                            textColor: '#991b1b'
+                        },
+                        {
+                            code: 'BLE',
+                            name: 'BLEU (BLE)',
+                            description: 'Alternative disponible (autre indice d\'article)',
+                            bgColor: '#eff6ff',
+                            borderColor: '#3b82f6',
+                            circleColor: '#3b82f6',
+                            textColor: '#1e40af'
+                        },
+                        {
+                            code: 'ORA',
+                            name: 'ORANGE (ORA)',
+                            description: 'Partiellement réservée, sans alternative',
+                            bgColor: '#fff7ed',
+                            borderColor: '#f97316',
+                            circleColor: '#f97316',
+                            textColor: '#9a3412'
+                        }
+                    ],
+                    benefits: [
+                        'La priorisation des préparations de commandes',
+                        'La visibilité sur la disponibilité stock',
+                        'Le pilotage de la production et des achats',
+                        'L\'optimisation de la satisfaction client'
+                    ],
+                    sharepointLinks: [
+                        'Les couleurs, la bible',
+                        'Les couleurs, ma passion'
+                    ],
+                    monitoringLinks: [
+                        'PM Couleur 007',
+                        'PM Couleur 023'
+                    ],
+                    cartographies: [
+                        {
+                            title: 'Carto Logistique B2B',
+                            description: 'Vue d\'ensemble des flux logistiques',
+                            color: '#9B59B6'
+                        },
+                        {
+                            title: 'Carto WMS-ERP',
+                            description: 'Interfaces entre systèmes',
+                            color: '#9B59B6'
+                        }
+                    ],
+                    flux: [
+                        {
+                            title: 'Flux Commande → Préparation',
+                            description: 'Du WMS vers l\'entrepôt',
+                            color: '#3498DB'
+                        },
+                        {
+                            title: 'Flux Statut Stock',
+                            description: 'Mise à jour temps réel',
+                            color: '#3498DB'
+                        },
+                        {
+                            title: 'Flux Alertes Couleur',
+                            description: 'Notifications automatiques',
+                            color: '#3498DB'
+                        }
+                    ],
+                    ressources: [
+                        {
+                            title: 'Serveur WMS-PROD-01',
+                            description: 'Serveur principal WMS',
+                            color: '#E74C3C'
+                        },
+                        {
+                            title: 'Base CEGID-DB',
+                            description: 'Base de données ERP',
+                            color: '#E74C3C'
+                        },
+                        {
+                            title: 'API Gateway',
+                            description: 'Passerelle d\'intégration',
+                            color: '#E74C3C'
+                        }
+                    ]
+                }
+            },
+            methods: {
+                alert(message) {
+                    window.alert(message);
+                },
+                openLink(linkName) {
+                    alert('Ouverture de : ' + linkName);
+                },
+                goBack() {
+                    // Retour à la page de recherche
+                    window.location.href = 'uranie-recherche-vue.html';
+                },
+                loadUrlParams() {
+                    // Lire le paramètre de recherche depuis l'URL
+                    const params = new URLSearchParams(window.location.search);
+                    const query = params.get('q');
+                    if (query) {
+                        this.searchQuery = query;
+                    }
+                }
+            },
+            mounted() {
+                this.loadUrlParams();
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
