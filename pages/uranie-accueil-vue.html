@@ -49,8 +49,18 @@
         }
         
         .card-rectangle.selected {
-            filter: brightness(0.5) !important;
-            opacity: 1 !important;
+            opacity: 0.5 !important;
+            position: relative;
+        }
+
+        .card-rectangle.selected::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: 1;
         }
     </style>
 </head>
